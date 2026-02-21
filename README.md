@@ -2,38 +2,98 @@
 
 A curated plugin marketplace for [Claude Code](https://claude.com/claude-code) built around the Horison PE deal intelligence stack — GCP, Supabase, Neo4j Aura, and Langfuse.
 
-One install gives you **10 MCP servers**, **10 specialized agents**, **6 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
+One install gives you **6 auto-configured MCP servers**, **10 specialized agents**, **7 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
 
 ## Quick Start
 
-```bash
-# 1. Add the marketplace
-/plugin marketplace add MartinNguyen03/horison-claude-code
-```
+### 1. Add the marketplace and install
 
 ```bash
-# 2. Install the core plugin (MCP servers + agents + skills)
+/plugin marketplace add MartinNguyen03/horison-claude-code
 /plugin install horison-defaults@horison-claude-code
 ```
 
-That's it. All 10 MCP servers, 10 agents, and 7 skills are now available.
+This gives you 6 MCP servers (Supabase, Playwright, Context7, Memory, Firebase, Serena), 10 agents, and 7 skills — all working out of the box.
+
+### 2. Configure Neo4j (optional)
+
+Neo4j and Langfuse require API keys, so they must be added manually to `~/.claude.json`.
+
+Open `~/.claude.json` and add `neo4j-database` under your project's `mcpServers`:
+
+```json
+{
+  "projects": {
+    "/path/to/your/project": {
+      "mcpServers": {
+        "neo4j-database": {
+          "command": "uvx",
+          "args": ["--with", "fastmcp<3", "mcp-neo4j-cypher@0.5.2", "--transport", "stdio"],
+          "env": {
+            "NEO4J_URI": "neo4j+s://xxxxxxxx.databases.neo4j.io",
+            "NEO4J_USERNAME": "neo4j",
+            "NEO4J_PASSWORD": "your-password",
+            "NEO4J_DATABASE": "neo4j"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+> **Important:** The `--with fastmcp<3` flag is required. `mcp-neo4j-cypher` is incompatible with `fastmcp>=3.0` (removed `stateless_http` kwarg). Without this pin, the server crashes on startup.
+
+Find your Neo4j URI in **Aura Console → instance → Connect**. Use `neo4j+s://` for encrypted connections.
+
+### 3. Configure Langfuse (optional)
+
+Add `langfuse` alongside neo4j in the same `mcpServers` block:
+
+```json
+"langfuse": {
+  "type": "http",
+  "url": "https://cloud.langfuse.com/api/public/mcp",
+  "headers": {
+    "Authorization": "Basic <base64-encoded-pk:sk>"
+  }
+}
+```
+
+To generate the auth header:
+```bash
+echo -n "pk-lf-XXXXX:sk-lf-XXXXX" | base64
+```
+
+Get your keys from **Langfuse → Project Settings → API Keys**.
+
+Regions: `cloud.langfuse.com` (EU), `us.cloud.langfuse.com` (US), `hipaa.cloud.langfuse.com` (HIPAA). Change the URL if not EU.
+
+### 4. Restart Claude Code
+
+MCP servers connect at startup. After any config change, restart Claude Code and run `/mcp` to verify all servers are connected.
 
 ## What's in `horison-defaults`
 
-### MCP Servers (10)
+### MCP Servers
+
+**Included in plugin (auto-configured):**
 
 | Server | Type | Auth | Purpose |
 |--------|------|------|---------|
 | **Supabase** | HTTP | OAuth (browser) | Query Postgres, manage auth, storage, edge functions |
-| **Neo4j** | stdio (`uvx`) | Env vars | Cypher queries against Neo4j Aura knowledge graph |
-| **Langfuse** | HTTP | API key | Prompt management, tracing, evaluation |
 | **Playwright** | stdio (`npx`) | None | Browser automation and testing |
 | **Context7** | stdio (`npx`) | None | Up-to-date library documentation |
-| **Linear** | HTTP | OAuth (browser) | Issue tracking and project management |
 | **Firebase** | stdio (`npx`) | `firebase login` | Firebase/GCP services |
 | **Serena** | stdio (`uvx`) | None | Code-aware AI assistant |
-| **Filesystem** | stdio (`npx`) | None | Local file operations |
 | **Memory** | stdio (`npx`) | None | Persistent key-value memory |
+
+**Manual setup required (added to `~/.claude.json`):**
+
+| Server | Type | Auth | Purpose |
+|--------|------|------|---------|
+| **Neo4j** | stdio (`uvx`) | Connection string | Cypher queries against Neo4j Aura knowledge graph |
+| **Langfuse** | HTTP | API key (Base64) | Prompt management, tracing, evaluation |
 
 ### Agents (10)
 
@@ -54,29 +114,37 @@ That's it. All 10 MCP servers, 10 agents, and 7 skills are now available.
 
 | Skill | Purpose |
 |-------|---------|
+| `setup` | API key configuration guide for all MCP servers |
 | `supabase-mcp` | How to use Supabase MCP tools effectively |
 | `neo4j-mcp` | Cypher patterns, schema inspection, Aura connection |
 | `langfuse-mcp` | Prompt management via Langfuse MCP |
 | `horison-architecture` | Platform architecture and data flows |
 | `memory` | Tool use policy and post-operation behaviour |
-| `setup` | API key configuration guide for all MCP servers |
 
-## API Key Setup
+## Troubleshooting
 
-Servers that need environment variables — set these in `~/.zshrc` or `~/.bashrc`:
+### MCP server won't connect
 
-```bash
-# Langfuse — encode: echo -n "pk-lf-XXX:sk-lf-XXX" | base64
-export LANGFUSE_MCP_AUTH="Basic <base64-output>"
+- Run `/mcp` to see which servers are connected and which failed
+- For stdio servers: ensure `node`/`npx` and `uv`/`uvx` are installed
+- For Neo4j: make sure `--with fastmcp<3` is in the args (see setup above)
+- For Langfuse: verify your Base64-encoded API key is correct
 
-# Neo4j Aura — find URI in Aura Console → instance → Connect
-export NEO4J_URI="neo4j+s://xxxxxxxx.databases.neo4j.io"
-export NEO4J_USERNAME="neo4j"
-export NEO4J_PASSWORD="your-password"
-export NEO4J_DATABASE="neo4j"
+### `enabledMcpjsonServers: []` blocking plugin servers
+
+If you see this in `~/.claude.json` under your project, it blocks **all** plugin MCP servers. Remove the key entirely or populate it with the servers you want enabled.
+
+### `disabledMcpServers` explicitly disabling servers
+
+Check for entries like `"plugin:horison-defaults:neo4j"` in `disabledMcpServers`. Remove any servers you want active.
+
+### Neo4j crashes with `stateless_http` error
+
+```
+TypeError: FastMCP() no longer accepts `stateless_http`
 ```
 
-Restart Claude Code after setting env vars. See `.env.example` for the full template.
+This means `fastmcp>=3.0` was resolved. Add `"--with", "fastmcp<3"` to the `args` array in your neo4j config.
 
 ## Optional Plugins (20)
 
@@ -112,7 +180,7 @@ Install any of these for additional skills and commands:
 ## Prerequisites
 
 - **Node.js / npx** — required for most stdio MCP servers
-- **uv / uvx** — required for Neo4j and Serena MCP servers (`pip install uv` or `brew install uv`)
+- **uv / uvx** — required for Neo4j and Serena MCP servers (`brew install uv` or `pip install uv`)
 - **Claude Code** with plugin marketplace support
 
 ## Project Structure
@@ -121,11 +189,10 @@ Install any of these for additional skills and commands:
 horison-claude-code/
 ├── .claude-plugin/
 │   └── marketplace.json       # Plugin catalog
-├── .env.example               # API key template
 ├── plugins/
 │   ├── horison-defaults/      # Core plugin (MCP + agents + skills)
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── .mcp.json          # 10 MCP server configs
+│   │   ├── .mcp.json          # 6 auto-configured MCP servers
 │   │   ├── agents/            # 10 agent definitions
 │   │   └── skills/            # 7 skill guides
 │   ├── python-development/
@@ -133,7 +200,3 @@ horison-claude-code/
 │   └── ...                    # 18 more optional plugins
 └── README.md
 ```
-
-## Disabling MCP Servers
-
-Any server can be disabled without uninstalling the plugin — remove or comment out its entry in the plugin's `.mcp.json`, or manage it through Claude Code's MCP settings.
