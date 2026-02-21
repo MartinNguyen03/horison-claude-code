@@ -8,8 +8,10 @@ One install gives you **12 MCP servers**, **10 specialized agents**, **7 skills*
 
 ```bash
 # 1. Add the marketplace
-/plugin marketplace add <org>/horison-claude-code
+/plugin marketplace add MartinNguyen03/horison-claude-code
+```
 
+```bash
 # 2. Install the core plugin (MCP servers + agents + skills)
 /plugin install horison-defaults@horison-claude-code
 ```
