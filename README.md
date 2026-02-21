@@ -2,7 +2,7 @@
 
 A curated plugin marketplace for [Claude Code](https://claude.com/claude-code) built around the Horison PE deal intelligence stack — GCP, Supabase, Neo4j Aura, and Langfuse.
 
-One install gives you **12 MCP servers**, **10 specialized agents**, **7 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
+One install gives you **11 MCP servers**, **10 specialized agents**, **6 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
 
 ## Quick Start
 
@@ -14,11 +14,11 @@ One install gives you **12 MCP servers**, **10 specialized agents**, **7 skills*
 /plugin install horison-defaults@horison-claude-code
 ```
 
-That's it. All 12 MCP servers, 10 agents, and 7 skills are now available.
+That's it. All 11 MCP servers, 10 agents, and 7 skills are now available.
 
 ## What's in `horison-defaults`
 
-### MCP Servers (12)
+### MCP Servers (11)
 
 | Server | Type | Auth | Purpose |
 |--------|------|------|---------|
@@ -28,7 +28,6 @@ That's it. All 12 MCP servers, 10 agents, and 7 skills are now available.
 | **PostgreSQL** | stdio (`npx`) | Connection string | Direct SQL access |
 | **Playwright** | stdio (`npx`) | None | Browser automation and testing |
 | **Context7** | stdio (`npx`) | None | Up-to-date library documentation |
-| **Exa** | stdio (`npx`) | API key | AI-powered web search |
 | **Linear** | HTTP | OAuth (browser) | Issue tracking and project management |
 | **Firebase** | stdio (`npx`) | `firebase login` | Firebase/GCP services |
 | **Serena** | stdio (`uvx`) | None | Code-aware AI assistant |
@@ -57,7 +56,6 @@ That's it. All 12 MCP servers, 10 agents, and 7 skills are now available.
 | `supabase-mcp` | How to use Supabase MCP tools effectively |
 | `neo4j-mcp` | Cypher patterns, schema inspection, Aura connection |
 | `langfuse-mcp` | Prompt management via Langfuse MCP |
-| `exa-mcp` | Web search patterns, Exa vs Context7 |
 | `horison-architecture` | Platform architecture and data flows |
 | `memory` | Tool use policy and post-operation behaviour |
 | `setup` | API key configuration guide for all MCP servers |
@@ -78,9 +76,6 @@ export NEO4J_DATABASE="neo4j"
 
 # PostgreSQL
 export DATABASE_URL="postgresql://user:pass@localhost:5432/mydb"
-
-# Exa — https://exa.ai/
-export EXA_API_KEY="..."
 ```
 
 Restart Claude Code after setting env vars. See `.env.example` for the full template.
@@ -132,7 +127,7 @@ horison-claude-code/
 ├── plugins/
 │   ├── horison-defaults/      # Core plugin (MCP + agents + skills)
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── .mcp.json          # 12 MCP server configs
+│   │   ├── .mcp.json          # 11 MCP server configs
 │   │   ├── agents/            # 10 agent definitions
 │   │   └── skills/            # 7 skill guides
 │   ├── python-development/

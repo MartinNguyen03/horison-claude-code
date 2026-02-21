@@ -31,12 +31,6 @@ export NEO4J_DATABASE="neo4j"
 export DATABASE_URL="postgresql://user:pass@localhost:5432/mydb"
 ```
 
-### Exa (web search)
-```bash
-# Get key at: https://exa.ai/
-export EXA_API_KEY="..."
-```
-
 ## MCP servers that need no keys
 
 These work immediately or authenticate via browser:
