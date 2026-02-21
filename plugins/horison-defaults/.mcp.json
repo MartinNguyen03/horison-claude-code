@@ -49,14 +49,6 @@
       "@playwright/mcp@latest"
     ]
   },
-  "filesystem": {
-    "command": "npx",
-    "args": [
-      "-y",
-      "@modelcontextprotocol/server-filesystem",
-      "${CLAUDE_PROJECT_DIR}"
-    ]
-  },
   "memory": {
     "command": "npx",
     "args": [
