@@ -1,29 +1,7 @@
 {
-  "langfuse": {
-    "type": "http",
-    "url": "https://cloud.langfuse.com/api/public/mcp",
-    "headers": {
-      "Authorization": "${LANGFUSE_MCP_AUTH}"
-    }
-  },
   "supabase": {
     "type": "http",
     "url": "https://mcp.supabase.com/mcp"
-  },
-  "neo4j": {
-    "command": "uvx",
-    "args": [
-      "mcp-neo4j-cypher@0.5.2",
-      "--transport",
-      "stdio"
-    ],
-    "env": {
-      "NEO4J_URI": "${NEO4J_URI}",
-      "NEO4J_USERNAME": "${NEO4J_USERNAME}",
-      "NEO4J_PASSWORD": "${NEO4J_PASSWORD}",
-      "NEO4J_DATABASE": "${NEO4J_DATABASE}",
-      "NEO4J_READ_TIMEOUT": "30"
-    }
   },
   "serena": {
     "command": "uvx",
@@ -55,10 +33,6 @@
       "-y",
       "@modelcontextprotocol/server-memory"
     ]
-  },
-  "linear": {
-    "type": "http",
-    "url": "https://mcp.linear.app/mcp"
   },
   "firebase": {
     "command": "npx",
