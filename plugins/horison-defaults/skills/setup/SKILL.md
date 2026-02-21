@@ -26,11 +26,6 @@ export NEO4J_PASSWORD="your-password"
 export NEO4J_DATABASE="neo4j"
 ```
 
-### PostgreSQL
-```bash
-export DATABASE_URL="postgresql://user:pass@localhost:5432/mydb"
-```
-
 ## MCP servers that need no keys
 
 These work immediately or authenticate via browser:

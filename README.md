@@ -2,7 +2,7 @@
 
 A curated plugin marketplace for [Claude Code](https://claude.com/claude-code) built around the Horison PE deal intelligence stack — GCP, Supabase, Neo4j Aura, and Langfuse.
 
-One install gives you **11 MCP servers**, **10 specialized agents**, **6 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
+One install gives you **10 MCP servers**, **10 specialized agents**, **6 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
 
 ## Quick Start
 
@@ -16,18 +16,17 @@ One install gives you **11 MCP servers**, **10 specialized agents**, **6 skills*
 /plugin install horison-defaults@horison-claude-code
 ```
 
-That's it. All 11 MCP servers, 10 agents, and 7 skills are now available.
+That's it. All 10 MCP servers, 10 agents, and 7 skills are now available.
 
 ## What's in `horison-defaults`
 
-### MCP Servers (11)
+### MCP Servers (10)
 
 | Server | Type | Auth | Purpose |
 |--------|------|------|---------|
 | **Supabase** | HTTP | OAuth (browser) | Query Postgres, manage auth, storage, edge functions |
 | **Neo4j** | stdio (`uvx`) | Env vars | Cypher queries against Neo4j Aura knowledge graph |
 | **Langfuse** | HTTP | API key | Prompt management, tracing, evaluation |
-| **PostgreSQL** | stdio (`npx`) | Connection string | Direct SQL access |
 | **Playwright** | stdio (`npx`) | None | Browser automation and testing |
 | **Context7** | stdio (`npx`) | None | Up-to-date library documentation |
 | **Linear** | HTTP | OAuth (browser) | Issue tracking and project management |
@@ -75,9 +74,6 @@ export NEO4J_URI="neo4j+s://xxxxxxxx.databases.neo4j.io"
 export NEO4J_USERNAME="neo4j"
 export NEO4J_PASSWORD="your-password"
 export NEO4J_DATABASE="neo4j"
-
-# PostgreSQL
-export DATABASE_URL="postgresql://user:pass@localhost:5432/mydb"
 ```
 
 Restart Claude Code after setting env vars. See `.env.example` for the full template.
@@ -129,7 +125,7 @@ horison-claude-code/
 ├── plugins/
 │   ├── horison-defaults/      # Core plugin (MCP + agents + skills)
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── .mcp.json          # 11 MCP server configs
+│   │   ├── .mcp.json          # 10 MCP server configs
 │   │   ├── agents/            # 10 agent definitions
 │   │   └── skills/            # 7 skill guides
 │   ├── python-development/
