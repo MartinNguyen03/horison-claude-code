@@ -74,6 +74,7 @@ These are defined in the plugin's `.mcp.json` and work automatically:
 | **Memory** | No auth required |
 | **Firebase** | Run `firebase login` once |
 | **Serena** | No auth required |
+| **Langfuse Docs** | No auth required |
 
 ## If an MCP server fails
 

@@ -2,7 +2,7 @@
 
 A curated plugin marketplace for [Claude Code](https://claude.com/claude-code) built around the Horison PE deal intelligence stack — GCP, Supabase, Neo4j Aura, and Langfuse.
 
-One install gives you **6 auto-configured MCP servers**, **10 specialized agents**, **7 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
+One install gives you **7 auto-configured MCP servers**, **10 specialized agents**, **7 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@ One install gives you **6 auto-configured MCP servers**, **10 specialized agents
 /plugin install horison-defaults@horison-claude-code
 ```
 
-This gives you 6 MCP servers (Supabase, Playwright, Context7, Memory, Firebase, Serena), 10 agents, and 7 skills — all working out of the box.
+This gives you 7 MCP servers (Supabase, Playwright, Context7, Memory, Firebase, Serena, Langfuse Docs), 10 agents, and 7 skills — all working out of the box.
 
 ### 2. Configure Neo4j (optional)
 
@@ -87,6 +87,7 @@ MCP servers connect at startup. After any config change, restart Claude Code and
 | **Firebase** | stdio (`npx`) | `firebase login` | Firebase/GCP services |
 | **Serena** | stdio (`uvx`) | None | Code-aware AI assistant |
 | **Memory** | stdio (`npx`) | None | Persistent key-value memory |
+| **Langfuse Docs** | HTTP | None | Up-to-date Langfuse documentation |
 
 **Manual setup required (added to `~/.claude.json`):**
 
@@ -192,7 +193,7 @@ horison-claude-code/
 ├── plugins/
 │   ├── horison-defaults/      # Core plugin (MCP + agents + skills)
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── .mcp.json          # 6 auto-configured MCP servers
+│   │   ├── .mcp.json          # 7 auto-configured MCP servers
 │   │   ├── agents/            # 10 agent definitions
 │   │   └── skills/            # 7 skill guides
 │   ├── python-development/
