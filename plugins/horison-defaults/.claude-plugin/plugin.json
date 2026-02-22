@@ -1,6 +1,6 @@
 {
   "name": "horison-defaults",
-  "description": "Horison platform plugin: 7 auto-configured MCP servers (Supabase, Playwright, Context7, Memory, Firebase, Serena, Langfuse Docs) + 2 manual (Neo4j, Langfuse), 10 agents (GCP architect, Supabase pro, Neo4j graph expert, Langfuse ops, KG pipeline dev, code reviewer, security analyzer, and more), 7 skills, and hooks.",
+  "description": "Horison platform plugin: 8 MCP servers (Supabase, Neo4j, Langfuse, Langfuse Docs, Playwright, Context7, Serena, Memory), 10 agents (GCP architect, Supabase pro, Neo4j graph expert, Langfuse ops, KG pipeline dev, code reviewer, security analyzer, and more), 7 skills, and hooks.",
   "keywords": ["horison", "mcp", "gcp", "supabase", "neo4j", "langfuse", "agents"],
   "version": "1.0.0",
   "author": {
