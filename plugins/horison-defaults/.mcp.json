@@ -41,5 +41,10 @@
       "firebase-tools@latest",
       "mcp"
     ]
+  },
+  "langfuse-docs": {
+    "transportType": "http",
+    "url": "https://langfuse.com/api/mcp",
+    "verifySsl": true
   }
 }
