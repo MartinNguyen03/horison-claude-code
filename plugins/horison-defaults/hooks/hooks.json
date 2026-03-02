@@ -10,18 +10,6 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash $PLUGIN_DIR/hooks/scripts/auto-format.sh",
-            "timeout": 5000
-          }
-        ]
-      }
     ]
   }
 }
