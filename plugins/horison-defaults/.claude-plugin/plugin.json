@@ -1,8 +1,8 @@
 {
   "name": "horison-defaults",
-  "description": "Horison platform plugin: 8 MCP servers (Supabase, Neo4j, Langfuse, Langfuse Docs, Playwright, Context7, Serena, Memory), 10 agents, 8 skills (including visual-explainer with Diagram Cloud integration and Horison branding), and hooks.",
-  "keywords": ["horison", "mcp", "gcp", "supabase", "neo4j", "langfuse", "agents", "diagrams", "visual-explainer"],
-  "version": "1.1.0",
+  "description": "Horison platform plugin: 8 MCP servers, 10 agents, 8 skills (including visual-explainer), and hooks (auto-format, secret-detection).",
+  "keywords": ["horison", "mcp", "gcp", "supabase", "neo4j", "langfuse", "agents", "diagrams", "visual-explainer", "hooks"],
+  "version": "1.2.0",
   "author": {
     "name": "Horison"
   }
