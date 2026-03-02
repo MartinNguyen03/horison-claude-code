@@ -91,11 +91,36 @@ def my_pipeline(input: str):
 
 ## Langfuse MCP Server
 
-When the Langfuse MCP server is available, use it to:
+When the Langfuse MCP server is available, use it for **prompt management**:
 - **List prompts**: See all managed prompts and their versions
 - **Get prompt**: Fetch a specific prompt version or label
 - **Create prompt**: Add new prompts or update existing ones
-- Auth is via `LANGFUSE_MCP_AUTH` header (`Basic <base64(pk:sk)>`)
+- Auth is via `LANGFUSE_MCP_AUTH` env var (base64-encoded `pk:sk`)
+
+## Langfuse CLI (for trace querying)
+
+For trace querying, observations, and debugging, use the **Langfuse CLI** — not curl or the REST API directly.
+
+```bash
+# Source credentials first
+cd ~/Documents/Horison/agentic-chat-service && source .env
+
+# List recent traces
+npx langfuse-cli api traces list --limit 10
+
+# Get a specific trace
+npx langfuse-cli api traces get <trace-id>
+
+# List observations for a trace
+npx langfuse-cli api observations list --trace-id <trace-id>
+
+# Filter by type or error level
+npx langfuse-cli api observations list --type GENERATION
+npx langfuse-cli api observations list --level ERROR
+
+# Discover all available resources
+npx langfuse-cli api __schema
+```
 
 ## Response Approach
 
