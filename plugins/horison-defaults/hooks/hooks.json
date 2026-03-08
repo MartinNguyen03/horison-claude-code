@@ -1,3 +1,14 @@
 {
-  "hooks": {}
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $PLUGIN_DIR/hooks/scripts/ensure-diagram-cli.sh"
+          }
+        ]
+      }
+    ]
+  }
 }
