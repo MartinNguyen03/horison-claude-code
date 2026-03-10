@@ -127,6 +127,7 @@ Add these meta tags after the `<title>` tag in every generated HTML file:
   <meta name="diagram:tags" content="tag1, tag2, tag3">
   <meta name="diagram:category" content="architecture">
   <meta name="diagram:status" content="active">
+  <meta name="diagram:project" content="horison-ai">
 
   <!-- Horison fonts -->
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -171,6 +172,13 @@ Comma-separated keywords for filtering and search:
 - Feature area: `file-mentions`, `agentic`, `chat-service`, `kg-worker`
 - Status indicators: `final`, `draft`, `proposal`
 
+#### `diagram:project`
+The Horison project this diagram belongs to. Used for filtering in the viewer:
+- `horison-ai` — Main Horison platform
+- `agentic-chat-service` — Chat backend service
+- `diagram-cloud` — This tool's own infrastructure
+- Any other project name relevant to the team
+
 #### `diagram:category`
 One of:
 - `architecture` — System architecture, component diagrams
@@ -180,6 +188,7 @@ One of:
 - `comparison` — Tables, feature matrices, gap analyses
 - `timeline` — Roadmaps, timelines, milestones
 - `state` — State machines, decision trees
+- `documentation` — Changelogs, guides, documentation pages
 - `other` — Anything that doesn't fit above
 
 #### `diagram:status`
@@ -352,6 +361,7 @@ Card grid layout with Horison styling. Hero numbers in `--accent` color. KPI car
 <meta name="diagram:tags" content="architecture, planning">
 <meta name="diagram:category" content="architecture">
 <meta name="diagram:status" content="active">
+<meta name="diagram:project" content="horison-ai">
 
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -478,7 +488,7 @@ code {
 
 Before delivering, verify:
 - **Horison branding**: IBM Plex Mono font, Horison color palette, sharp corners, lowercase text
-- **Metadata complete**: All five `diagram:*` meta tags present and accurate
+- **Metadata complete**: All six `diagram:*` meta tags present and accurate
 - **Both themes**: Toggle OS between light and dark mode — both should look intentional
 - **Information completeness**: Does the diagram convey what was asked for?
 - **No overflow**: Resize browser — no content should clip or escape
@@ -506,6 +516,13 @@ diagram comment team/anish/my-diagram.html "Looks great!"
 
 # Update status
 diagram status team/anish/my-diagram.html review
+
+# Archive a diagram (shortcut for status → archived)
+diagram archive team/anish/old-design.html
+
+# Permanently delete a diagram (manifest + GCS file)
+diagram delete team/anish/old-design.html
+diagram delete team/anish/old-design.html --yes  # skip confirmation
 ```
 
 ---
