@@ -1,9 +1,10 @@
 #!/bin/bash
-# Ensure the Diagram Cloud CLI is installed.
+# Ensure the Diagram Cloud CLI is installed and up-to-date.
 # Runs as a SessionStart hook — always exits 0, never blocks the session.
 #
-# If `diagram` is already on PATH: exits in <100ms.
-# If not: clones diagram-cloud to ~/.horison/diagram-cloud, builds, and links.
+# Fresh install:  clones diagram-cloud, builds CLI, links globally.
+# Existing install: compares installed version against latest cli-v* git tag.
+#                   Only pulls + rebuilds when a newer version is tagged.
 
 # Consume stdin (SessionStart hook contract)
 cat > /dev/null
@@ -14,30 +15,23 @@ MIN_NODE_VERSION=20
 
 OUTPUT_EMPTY='{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":""}}'
 
-# ── Already installed — fast exit ────────────────────────────────────────────
-
-if command -v diagram &> /dev/null; then
-  echo "$OUTPUT_EMPTY"
-  exit 0
-fi
-
 # ── Prerequisites check (silent fail if missing) ────────────────────────────
 
 if ! command -v node &> /dev/null; then
-  echo "diagram-cli: Node.js not found, skipping install" >&2
+  echo "diagram-cli: Node.js not found, skipping" >&2
   echo "$OUTPUT_EMPTY"
   exit 0
 fi
 
 NODE_MAJOR=$(node -e "process.stdout.write(String(process.versions.node.split('.')[0]))")
 if [[ "$NODE_MAJOR" -lt "$MIN_NODE_VERSION" ]]; then
-  echo "diagram-cli: Node.js $MIN_NODE_VERSION+ required, skipping install" >&2
+  echo "diagram-cli: Node.js $MIN_NODE_VERSION+ required, skipping" >&2
   echo "$OUTPUT_EMPTY"
   exit 0
 fi
 
 if ! command -v git &> /dev/null; then
-  echo "diagram-cli: git not found, skipping install" >&2
+  echo "diagram-cli: git not found, skipping" >&2
   echo "$OUTPUT_EMPTY"
   exit 0
 fi
@@ -48,32 +42,66 @@ if command -v pnpm &> /dev/null; then
 elif command -v npm &> /dev/null; then
   PM="npm"
 else
-  echo "diagram-cli: neither npm nor pnpm found, skipping install" >&2
+  echo "diagram-cli: neither npm nor pnpm found, skipping" >&2
   echo "$OUTPUT_EMPTY"
   exit 0
 fi
 
-# ── Clone or update ──────────────────────────────────────────────────────────
+# ── Helper: build and link the CLI ──────────────────────────────────────────
 
-if [[ -d "$INSTALL_DIR/.git" ]]; then
-  cd "$INSTALL_DIR" && git pull --ff-only 2>/dev/null || true
-else
-  mkdir -p "$(dirname "$INSTALL_DIR")"
-  if ! git clone --depth 1 "$REPO_URL" "$INSTALL_DIR" 2>/dev/null; then
-    echo "diagram-cli: failed to clone repo, skipping install" >&2
+build_and_link() {
+  cd "$INSTALL_DIR/cli" || return 1
+  $PM install --frozen-lockfile 2>/dev/null || $PM install 2>/dev/null
+  npx tsup 2>/dev/null
+  $PM link --global 2>/dev/null || npm link 2>/dev/null
+}
+
+# ── Already installed — check for updates ────────────────────────────────────
+
+if command -v diagram &> /dev/null && [[ -d "$INSTALL_DIR/.git" ]]; then
+  LOCAL_VERSION=$(diagram --version 2>/dev/null)
+
+  # Fetch latest cli-v* tag from remote (lightweight, no checkout)
+  LATEST_TAG=$(git -C "$INSTALL_DIR" ls-remote --tags --sort=-v:refname origin 'refs/tags/cli-v*' 2>/dev/null \
+    | head -1 \
+    | sed 's|.*refs/tags/cli-v||')
+
+  # If we couldn't reach remote or no tags exist, skip quietly
+  if [[ -z "$LATEST_TAG" ]]; then
     echo "$OUTPUT_EMPTY"
     exit 0
   fi
+
+  # Up to date — fast exit
+  if [[ "$LOCAL_VERSION" == "$LATEST_TAG" ]]; then
+    echo "$OUTPUT_EMPTY"
+    exit 0
+  fi
+
+  # New version available — pull and rebuild
+  echo "diagram-cli: updating $LOCAL_VERSION → $LATEST_TAG" >&2
+  cd "$INSTALL_DIR" && git pull --ff-only 2>/dev/null || true
+  build_and_link
+
+  if command -v diagram &> /dev/null; then
+    echo "diagram-cli: updated to $LATEST_TAG" >&2
+    echo "{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"Diagram CLI updated to $LATEST_TAG.\"}}"
+  else
+    echo "$OUTPUT_EMPTY"
+  fi
+  exit 0
 fi
 
-# ── Build & link (cli/ only — no workspace needed) ──────────────────────────
+# ── Fresh install ────────────────────────────────────────────────────────────
 
-cd "$INSTALL_DIR/cli"
-$PM install 2>/dev/null
-npx tsup 2>/dev/null
-$PM link --global 2>/dev/null || npm link 2>/dev/null
+mkdir -p "$(dirname "$INSTALL_DIR")"
+if ! git clone --depth 1 "$REPO_URL" "$INSTALL_DIR" 2>/dev/null; then
+  echo "diagram-cli: failed to clone repo, skipping install" >&2
+  echo "$OUTPUT_EMPTY"
+  exit 0
+fi
 
-# ── Result ───────────────────────────────────────────────────────────────────
+build_and_link
 
 if command -v diagram &> /dev/null; then
   echo "diagram-cli: installed successfully" >&2
