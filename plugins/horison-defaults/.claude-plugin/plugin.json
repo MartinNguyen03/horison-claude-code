@@ -2,7 +2,7 @@
   "name": "horison-defaults",
   "description": "Horison platform plugin: 8 MCP servers, 10 agents, 8 skills (including visual-explainer), and hooks (auto-format, secret-detection).",
   "keywords": ["horison", "mcp", "gcp", "supabase", "neo4j", "langfuse", "agents", "diagrams", "visual-explainer", "hooks"],
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "Horison"
   }

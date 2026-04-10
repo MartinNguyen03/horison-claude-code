@@ -7,7 +7,7 @@
     "command": "uvx",
     "args": [
       "--with",
-      "fastmcp<3",
+      "fastmcp>=2,<2.14",
       "mcp-neo4j-cypher@0.5.2",
       "--transport",
       "stdio"
@@ -35,7 +35,8 @@
     "args": [
       "--from",
       "git+https://github.com/oraios/serena",
-      "serena-mcp-server",
+      "serena",
+      "start-mcp-server",
       "--context",
       "claude-code"
     ]
