@@ -14,13 +14,13 @@ The plugin registers two Neo4j MCP servers — pick the one that matches the gra
 | Server | Graph | Env vars |
 |--------|-------|----------|
 | `neo4j` | horison-ai (main product graph) | `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE` |
-| `neo4j-ta` | TA-Horison (consultancy benchmarking graph) | `NEO4J_TA_URI`, `NEO4J_TA_USERNAME`, `NEO4J_TA_PASSWORD`, `NEO4J_TA_DATABASE` |
+| `neo4j-ta` | TA-Horison (consultancy benchmarking graph) | `TA_NEO4J_URI`, `TA_NEO4J_USERNAME`, `TA_NEO4J_PASSWORD`, `TA_NEO4J_DATABASE` |
 
 Both expose the same tool patterns (`get_neo4j_schema`, `read_neo4j_cypher`, `write_neo4j_cypher`) — just call them on the right server. The two graphs have **different schemas**, so always run `get_neo4j_schema` against the target server before writing non-trivial queries; don't assume labels/relationships from one apply to the other.
 
 ## Connection
 
-Examples below use `NEO4J_URI` for the `neo4j` server; substitute `NEO4J_TA_URI` (and the matching `NEO4J_TA_*` username/password/database vars) when configuring the `neo4j-ta` server. Everything else is identical.
+Examples below use `NEO4J_URI` for the `neo4j` server; substitute `TA_NEO4J_URI` (and the matching `TA_NEO4J_*` username/password/database vars) when configuring the `neo4j-ta` server. Everything else is identical.
 
 - **Aura**: `<PREFIX>_URI=neo4j+s://xxxxxxxx.databases.neo4j.io` (encrypted, required for Aura)
 - **Local**: `<PREFIX>_URI=bolt://localhost:7687`
