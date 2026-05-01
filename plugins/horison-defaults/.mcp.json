@@ -19,6 +19,22 @@
       "NEO4J_DATABASE": "${NEO4J_DATABASE}"
     }
   },
+  "neo4j-ta": {
+    "command": "uvx",
+    "args": [
+      "--with",
+      "fastmcp>=2,<2.14",
+      "mcp-neo4j-cypher@0.5.2",
+      "--transport",
+      "stdio"
+    ],
+    "env": {
+      "NEO4J_URI": "${NEO4J_TA_URI}",
+      "NEO4J_USERNAME": "${NEO4J_TA_USERNAME}",
+      "NEO4J_PASSWORD": "${NEO4J_TA_PASSWORD}",
+      "NEO4J_DATABASE": "${NEO4J_TA_DATABASE}"
+    }
+  },
   "langfuse": {
     "type": "http",
     "url": "https://langfuse.horison.ai/api/public/mcp",
