@@ -20,13 +20,10 @@
     }
   },
   "neo4j-ta": {
-    "command": "uvx",
+    "command": "sh",
     "args": [
-      "--with",
-      "fastmcp>=2,<2.14",
-      "mcp-neo4j-cypher@0.5.2",
-      "--transport",
-      "stdio"
+      "-c",
+      "exec uvx --with 'fastmcp>=2,<2.14' mcp-neo4j-cypher@0.5.2 --transport stdio"
     ],
     "env": {
       "NEO4J_URI": "${NEO4J_TA_URI}",
