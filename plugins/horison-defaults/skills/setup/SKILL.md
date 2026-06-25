@@ -21,6 +21,8 @@ The plugin registers **three** Neo4j MCP servers — one per Horison graph envir
 
 All run side-by-side as independent stdio subprocesses and surface as separately-namespaced tools (`mcp__...neo4j-prod__*`, `mcp__...neo4j-dev__*`, `mcp__...neo4j-ta__*`), so you can query any graph in the same session. **`neo4j-prod` is production data — prefer `neo4j-dev` for anything exploratory or write-bearing.**
 
+> Each server is registered with a deliberately **unique `command`+`args`** (`uvx …` / `uvx --quiet …` / `uv tool run …`) because the plugin loader dedupes by argv and ignores `env`. They launch a byte-identical server; the distinct argv is only to register all three. See the `neo4j-mcp` skill for details.
+
 ```bash
 # Horison Prod (neo4j-prod server)
 # For Aura: use neo4j+s:// (encrypted). Find URI in Aura Console → instance → Connect

@@ -22,6 +22,7 @@
   "neo4j-dev": {
     "command": "uvx",
     "args": [
+      "--quiet",
       "--with",
       "fastmcp>=2,<2.14",
       "mcp-neo4j-cypher@0.5.2",
