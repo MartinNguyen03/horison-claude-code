@@ -7,20 +7,23 @@ description: How to use the Neo4j MCP server tools effectively. Activated when w
 
 The Neo4j MCP server (`mcp-neo4j-cypher`) gives Claude direct Cypher query access to your Neo4j database. Uses the `neo4j+s://` protocol for Aura cloud instances.
 
-## Two graphs, two servers
+## Three graphs, three servers
 
-The plugin registers two Neo4j MCP servers — pick the one that matches the graph you want to query:
+The plugin registers three Neo4j MCP servers — pick the one that matches the graph you want to query:
 
-| Server | Graph | Env vars |
-|--------|-------|----------|
-| `neo4j` | horison-ai (main product graph) | `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE` |
-| `neo4j-ta` | TA-Horison (consultancy benchmarking graph) | `TA_NEO4J_URI`, `TA_NEO4J_USERNAME`, `TA_NEO4J_PASSWORD`, `TA_NEO4J_DATABASE` |
+| Server | Graph (environment) | Env vars |
+|--------|---------------------|----------|
+| `neo4j-prod` | Horison Prod — tenant graph, **production** (cabde9ed) | `PROD_NEO4J_URI`, `PROD_NEO4J_USERNAME`, `PROD_NEO4J_PASSWORD`, `PROD_NEO4J_DATABASE` |
+| `neo4j-dev` | Horison Dev — tenant graph, **development** (37d16874) | `DEV_NEO4J_URI`, `DEV_NEO4J_USERNAME`, `DEV_NEO4J_PASSWORD`, `DEV_NEO4J_DATABASE` |
+| `neo4j-ta` | Horison TA — consultancy benchmarking graph | `TA_NEO4J_URI`, `TA_NEO4J_USERNAME`, `TA_NEO4J_PASSWORD`, `TA_NEO4J_DATABASE` |
 
-Both expose the same tool patterns (`get_neo4j_schema`, `read_neo4j_cypher`, `write_neo4j_cypher`) — just call them on the right server. The two graphs have **different schemas**, so always run `get_neo4j_schema` against the target server before writing non-trivial queries; don't assume labels/relationships from one apply to the other.
+All expose the same tool patterns (`get_neo4j_schema`, `read_neo4j_cypher`, `write_neo4j_cypher`) — just call them on the right server. **`neo4j-prod` and `neo4j-dev` share the same schema** (dev is a copy of prod); `neo4j-ta` is a different schema. **`neo4j-prod` is live production data — default to `neo4j-dev` for exploration and anything that writes.** Run `get_neo4j_schema` against the target before non-trivial queries.
+
+> ⚠️ **Maintenance constraint — each server needs a UNIQUE `command`+`args`.** Claude Code's plugin MCP loader dedupes servers by `command`+`args` and **ignores `env`**. Two servers with identical argv collapse into one and the second is dropped ("skipped — same command as server provided by plugin"). That's why `neo4j-prod` uses `uvx …`, `neo4j-dev` uses `uvx --quiet …`, and `neo4j-ta` uses `uv tool run …` — three distinct argvs that launch a byte-identical server. **Never make two of these argv-identical** (changing only the `PROD_/DEV_/TA_` env block will silently fail). See commit `8bcccfc`. Verify by booting Claude Code and confirming `/mcp` shows all three connected — don't trust inspection.
 
 ## Connection
 
-Examples below use `NEO4J_URI` for the `neo4j` server; substitute `TA_NEO4J_URI` (and the matching `TA_NEO4J_*` username/password/database vars) when configuring the `neo4j-ta` server. Everything else is identical.
+Examples below use `PROD_NEO4J_URI` for the `neo4j-prod` server; substitute the `DEV_NEO4J_*` or `TA_NEO4J_*` prefix when configuring the other servers. Everything else is identical.
 
 - **Aura**: `<PREFIX>_URI=neo4j+s://xxxxxxxx.databases.neo4j.io` (encrypted, required for Aura)
 - **Local**: `<PREFIX>_URI=bolt://localhost:7687`

@@ -2,7 +2,7 @@
   "name": "horison-defaults",
   "description": "Horison platform plugin: 8 MCP servers, 10 agents, 10 skills (including visual-explainer and storm-research), the /storm research command, and hooks (auto-format, secret-detection).",
   "keywords": ["horison", "mcp", "gcp", "supabase", "neo4j", "langfuse", "agents", "diagrams", "visual-explainer", "storm-research", "research", "hooks"],
-  "version": "1.2.8",
+  "version": "1.3.0",
   "author": {
     "name": "Horison"
   }
