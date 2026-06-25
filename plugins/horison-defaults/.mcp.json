@@ -3,7 +3,7 @@
     "type": "http",
     "url": "https://mcp.supabase.com/mcp"
   },
-  "neo4j": {
+  "neo4j-prod": {
     "command": "uvx",
     "args": [
       "--with",
@@ -13,10 +13,26 @@
       "stdio"
     ],
     "env": {
-      "NEO4J_URI": "${NEO4J_URI}",
-      "NEO4J_USERNAME": "${NEO4J_USERNAME}",
-      "NEO4J_PASSWORD": "${NEO4J_PASSWORD}",
-      "NEO4J_DATABASE": "${NEO4J_DATABASE}"
+      "NEO4J_URI": "${PROD_NEO4J_URI}",
+      "NEO4J_USERNAME": "${PROD_NEO4J_USERNAME}",
+      "NEO4J_PASSWORD": "${PROD_NEO4J_PASSWORD}",
+      "NEO4J_DATABASE": "${PROD_NEO4J_DATABASE}"
+    }
+  },
+  "neo4j-dev": {
+    "command": "uvx",
+    "args": [
+      "--with",
+      "fastmcp>=2,<2.14",
+      "mcp-neo4j-cypher@0.5.2",
+      "--transport",
+      "stdio"
+    ],
+    "env": {
+      "NEO4J_URI": "${DEV_NEO4J_URI}",
+      "NEO4J_USERNAME": "${DEV_NEO4J_USERNAME}",
+      "NEO4J_PASSWORD": "${DEV_NEO4J_PASSWORD}",
+      "NEO4J_DATABASE": "${DEV_NEO4J_DATABASE}"
     }
   },
   "neo4j-ta": {
