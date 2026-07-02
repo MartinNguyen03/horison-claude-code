@@ -2,7 +2,7 @@
 
 A curated plugin marketplace for [Claude Code](https://claude.com/claude-code) built around the Horison PE deal intelligence stack — GCP, Supabase, Neo4j Aura, and Langfuse.
 
-One install gives you **8 MCP servers**, **10 specialized agents**, **7 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
+One install gives you **12 MCP servers**, **10 specialized agents**, **11 skills**, and **20 optional plugin packs** covering Python, TypeScript, infrastructure, data engineering, and more.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@ One install gives you **8 MCP servers**, **10 specialized agents**, **7 skills**
 /plugin install horison-defaults@horison-claude-code
 ```
 
-This gives you 8 MCP servers, 10 agents, and 7 skills. Servers that need no auth (Supabase, Playwright, Context7, Memory, Serena, Langfuse Docs) work out of the box. Neo4j and Langfuse need environment variables — see below.
+This gives you 12 MCP servers, 10 agents, and 11 skills. Servers that need no env-var setup (Supabase, Playwright, Context7, Memory, Serena, Langfuse Docs, and both **horison-prod** / **horison-dev**) work out of the box — the Horison servers authenticate via browser OAuth. Only Neo4j and Langfuse need environment variables — see below.
 
 ### 2. Set environment variables
 
@@ -33,6 +33,22 @@ export LANGFUSE_MCP_AUTH="<base64-encoded-pk:sk>"
 
 > **Note:** The plugin prepends `Basic ` automatically. The MCP endpoint requires Langfuse **v3.125.0+**.
 
+### Horison App MCP
+
+Both `horison-prod` (`https://mcp.horison.ai/mcp`) and `horison-dev` (default
+`http://localhost:8010/mcp`) authenticate via **WorkOS OAuth in the browser** —
+**no env vars or tokens to set.** Run `/mcp`, select the server, and Authenticate.
+
+`horison-dev` targets a server you run locally (`make mcp` in agentic-chat-service);
+until it's running it shows as *failed* in `/mcp` — harmless. To repoint it (must
+be a registered WorkOS resource indicator):
+
+```bash
+# export DEV_HORISON_MCP_URL="https://staging---horison-mcp-iosxkhzrva-ew.a.run.app/mcp"
+```
+
+See the **`horison-mcp`** skill for the full run-locally and add-a-tool workflow.
+
 ### 3. Restart Claude Code
 
 ```bash
@@ -43,12 +59,14 @@ Restart Claude Code and run `/mcp` to verify all servers are connected. Servers 
 
 ## What's in `horison-defaults`
 
-### MCP Servers (8)
+### MCP Servers (12)
 
 | Server | Type | Auth | Purpose |
 |--------|------|------|---------|
 | **Supabase** | HTTP | OAuth (browser) | Query Postgres, manage auth, storage, edge functions |
-| **Neo4j** | stdio (`uvx`) | Env vars | Cypher queries against Neo4j Aura knowledge graph |
+| **Horison Prod** | HTTP | OAuth (browser) | 17 read-only deal / KG / vault tools against production (`mcp.horison.ai`) |
+| **Horison Dev** | HTTP | OAuth (browser) | Same tools against a locally-run server (`localhost:8010`) — for tool development |
+| **Neo4j ×3** | stdio (`uvx`) | Env vars | Cypher against the `prod` / `dev` / `ta` Neo4j Aura graphs |
 | **Langfuse** | HTTP | Env vars | Prompt management, tracing, evaluation |
 | **Langfuse Docs** | HTTP | None | Up-to-date Langfuse documentation |
 | **Playwright** | stdio (`npx`) | None | Browser automation and testing |
@@ -71,11 +89,12 @@ Restart Claude Code and run `/mcp` to verify all servers are connected. Servers 
 | `test-writer` | inherit | Unit and integration test generation |
 | `api-documenter` | inherit | REST/GraphQL documentation |
 
-### Skills (7)
+### Skills (11)
 
 | Skill | Purpose |
 |-------|---------|
 | `setup` | API key configuration guide for all MCP servers |
+| `horison-mcp` | Connect to, run locally, and add tools to the Horison app MCP |
 | `supabase-mcp` | How to use Supabase MCP tools effectively |
 | `neo4j-mcp` | Cypher patterns, schema inspection, Aura connection |
 | `langfuse-mcp` | Prompt management via Langfuse MCP |
@@ -149,9 +168,9 @@ horison-claude-code/
 ├── plugins/
 │   ├── horison-defaults/      # Core plugin (MCP + agents + skills)
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── .mcp.json          # 8 MCP server configs
+│   │   ├── .mcp.json          # 12 MCP server configs
 │   │   ├── agents/            # 10 agent definitions
-│   │   └── skills/            # 7 skill guides
+│   │   └── skills/            # 11 skill guides
 │   ├── python-development/
 │   ├── javascript-typescript/
 │   └── ...                    # 18 more optional plugins

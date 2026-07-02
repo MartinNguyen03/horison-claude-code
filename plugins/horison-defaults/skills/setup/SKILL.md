@@ -59,6 +59,29 @@ Get keys from **Langfuse → Project Settings → API Keys**. The plugin prepend
 
 > **Note:** The MCP endpoint requires Langfuse **v3.125.0+**.
 
+### Horison App MCP (deal / KG tools)
+
+The plugin registers **two** Horison MCP servers. **Both use WorkOS OAuth in the
+browser** — no env vars or tokens to set:
+
+| Server | Target | WorkOS env | Setup |
+|--------|--------|-----------|-------|
+| `horison-prod` | `https://mcp.horison.ai/mcp` (hardcoded) | Production | None — `/mcp → Authenticate` |
+| `horison-dev` | `http://localhost:8010/mcp` (default) | Staging | None — run the server, then `/mcp → Authenticate` |
+
+`horison-prod` works immediately. `horison-dev` targets a server you run locally
+(`make mcp` in agentic-chat-service); until it's running it shows as **failed** in
+`/mcp` — harmless if you're not doing local MCP development.
+
+```bash
+# Optional — repoint horison-dev away from localhost:8010 (must be a registered
+# WorkOS resource indicator, e.g. the deployed staging service):
+# export DEV_HORISON_MCP_URL="https://staging---horison-mcp-iosxkhzrva-ew.a.run.app/mcp"
+```
+
+See the **`horison-mcp`** skill for the full run-locally and add-a-tool workflow
+(including the `localhost:3000` consent frontend needed for the local OAuth flow).
+
 ## MCP servers included in the plugin (no setup needed)
 
 | Server | Auth |

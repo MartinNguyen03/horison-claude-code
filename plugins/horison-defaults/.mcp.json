@@ -3,6 +3,14 @@
     "type": "http",
     "url": "https://mcp.supabase.com/mcp"
   },
+  "horison-dev": {
+    "type": "http",
+    "url": "${DEV_HORISON_MCP_URL:-http://localhost:8010/mcp}"
+  },
+  "horison-prod": {
+    "type": "http",
+    "url": "https://mcp.horison.ai/mcp"
+  },
   "neo4j-prod": {
     "command": "uvx",
     "args": [
